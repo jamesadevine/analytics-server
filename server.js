@@ -8,7 +8,7 @@ var app = express();  //create the app object
 //app.use(logger('dev'));
 var cookieParser = require('cookie-parser');  //used to
 var session = require('express-session'); //used for managing sessions
-var uuid = require('node-uuid');  //used to generate UUIDs
+var uuid = require('shortid');  //used to generate UUIDs
 var moment = require('moment'); //clever date library
 var fs = require('fs'); //used to interact with the file system
 var request = require('request');
@@ -203,7 +203,7 @@ app.post('/api/event/', function (req, res) {
 
     if(!hasCookie(req.cookies))
     {
-      cookie = uuid.v4()
+      cookie = uuid.generate()
       res.cookie("pxt_tracking", cookie);
     }
     else
