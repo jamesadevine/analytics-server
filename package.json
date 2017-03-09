@@ -1,28 +1,29 @@
 {
-  "name": "module-name",
-  "version": "10.3.1",
-  "description": "An example module to illustrate the usage of a package.json",
-  "author": "Your Name <you.name@example.org>",
-  "main": "lib/foo.js",
-  "repository": {
-  "type": "git",
-  "url": "https://github.com/nodejitsu/browsenpm.org"
-},
-  "bugs": {
-  "url": "https://github.com/nodejitsu/browsenpm.org/issues"
-},
-  "dependencies": {
-    "express": "*",
-    "express-session": "*",
-    "node-uuid": "*",
-    "morgan":"*",
-    "cookie-parser":"*",
-    "body-parser":"*",
-    "favicon": "*",
-    "uuid": "*",
-    "moment":"*",
-    "request":"*",
-    "mongoose":"*"
-  },
-  "license": "MIT"
+    "name": "module-name",
+    "version": "10.3.1",
+    "description": "An example module to illustrate the usage of a package.json",
+    "author": "Your Name <you.name@example.org>",
+    "main": "lib/foo.js",
+    "repository": {
+    "type": "git",
+    "url": "https://github.com/nodejitsu/browsenpm.org"
+    },
+    "bugs": {
+      "url": "https://github.com/nodejitsu/browsenpm.org/issues"
+    },
+    "dependencies": {
+        "express": "*",
+        "express-session": "*",
+        "node-uuid": "*",
+        "morgan":"*",
+        "cookie-parser":"*",
+        "body-parser":"*",
+        "favicon": "*",
+        "uuid": "*",
+        "moment":"*",
+        "request":"*",
+        "mongoose":"*",
+        "async":"*"
+    },
+    "license": "MIT"
 }

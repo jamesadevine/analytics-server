@@ -5,7 +5,7 @@
 var express = require('express'); //express framework!
 var logger = require('morgan');
 var app = express();  //create the app object
-app.use(logger('dev'));
+//app.use(logger('dev'));
 var cookieParser = require('cookie-parser');  //used to
 var session = require('express-session'); //used for managing sessions
 var uuid = require('node-uuid');  //used to generate UUIDs
@@ -16,9 +16,112 @@ var request = require('request');
 var mongoose = require('mongoose'); //allows interation with MongoDB
 
 //connect to MongoDB!
-//mongoose.connect('mongodb://localhost/smartmonitoring');
+//mongoose.connect('mongodb://localhost/pxtracking');
 //mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 
+// schemas for the database...
+/*var BasicEventSchema = mongoose.model('BasicEvent', {
+    type: String,
+    timestamp: Number,
+    cookie: {type: String, index: true},
+    data: mongoose.Schema.Types.Mixed,
+})
+
+var MouseEventSchema = mongoose.model('MouseEvent', {
+    type: String,
+    timestamp: Number,
+    cookie: {type: String, index: true},
+    data: mongoose.Schema.Types.Mixed,
+    x: Number;
+    y: Number;
+    srcId: String;
+    srcClass: String;
+    srcNodeName: String;
+})
+
+var BlocklyEvent = mongoose.model('BlocklyEvent', {
+    type: String,
+    timestamp: Number,
+    cookie: {type: String, index: true},
+    data: mongoose.Schema.Types.Mixed,
+    workspaceId: String,
+    blockId: String,
+    group: String,
+    blockType: String,
+})
+
+var BlocklyUIEvent = mongoose.model('BlocklyUIEvent', {
+    type: String,
+    timestamp: Number,
+    cookie: {type: String, index: true},
+    data: mongoose.Schema.Types.Mixed,
+    workspaceId: String,
+    blockId: String,
+    group: String,
+    blockType: String,
+    uiType: String,
+    oldValue: mongoose.Schema.Types.Mixed,
+    newValue: mongoose.Schema.Types.Mixed
+})
+
+var BlocklyCreateEvent = mongoose.model('BlocklyCreateEvent', {
+    type: String,
+    timestamp: Number,
+    cookie: {type: String, index: true},
+    data: mongoose.Schema.Types.Mixed,
+    workspaceId: String,
+    blockId: String,
+    group: String,
+    blockType: String,
+    xml: mongoose.Schema.Types.Mixed,
+    ids: [String];
+})
+
+var BlocklyDeleteEvent = mongoose.model('BlocklyDeleteEvent', {
+    type: String,
+    timestamp: Number,
+    cookie: {type: String, index: true},
+    data: mongoose.Schema.Types.Mixed,
+    workspaceId: String,
+    blockId: String,
+    group: String,
+    blockType: String,
+    xml: mongoose.Schema.Types.Mixed,
+    ids: [String];
+})
+
+var BlocklyChangeEvent = mongoose.model('BlocklyChangeEvent', {
+    type: String,
+    timestamp: Number,
+    cookie: {type: String, index: true},
+    data: mongoose.Schema.Types.Mixed,
+    workspaceId: String,
+    blockId: String,
+    group: String,
+    blockType: String,
+    name: String
+})
+
+var BlocklyMoveEvent = mongoose.model('BlocklyMoveEvent', {
+    type: String,
+    timestamp: Number,
+    cookie: {type: String, index: true},
+    data: mongoose.Schema.Types.Mixed,
+    workspaceId: String,
+    blockId: String,
+    group: String,
+    blockType: String,
+    name: String,
+    oldParentId: String,
+    newParentId: String,
+    oldParentBlockType: String,
+    newParentBlockType: String,
+    oldCoordinate: mongoose.Schema.Types.Mixed,
+    newCoordinate: mongoose.Schema.Types.Mixed,
+    oldInputName: String,
+    newInputName: String
+})
+*/
 //create the project name
 app.use(cookieParser());
 
@@ -63,17 +166,6 @@ var server = app.listen(8000, function () {
   console.log('Server listening at http://%s:%s', host, port);
 });
 
-/*var io = require('socket.io')(server);
-
-io.on('connection', function(socket){
-  console.info('New client connected (id=' + socket.id + ').');
-
-  socket.on('setUserID',function(userData){
-    socket.join(userData.userid);
-    console.log(userData);
-  });
-});*/
-
 /*
   --------------------COMMON FUNCTIONS----------------------
 */
@@ -98,23 +190,26 @@ var commonFunctions ={
   }
 };
 
-function hasCookie(cookie)
+function hasCookie(cookies)
 {
-  if(!cookie["pxt_tracking"])
+  if(!cookies["pxt_tracking"])
     return false
 
   return true;
 }
 
 app.post('/api/event/', function (req, res) {
+    var cookie;
 
-    console.log(req.cookies, req.body);
     if(!hasCookie(req.cookies))
     {
-      var cookie = uuid.v4()
+      cookie = uuid.v4()
       res.cookie("pxt_tracking", cookie);
-      console.log("cookie genereated ", cookie)
     }
+    else
+        cookie = req.cookies["pxt_tracking"]
+
+    console.log(JSON.stringify({cookie:cookie,data:req.body}))
 
     var required = ["data"];
     var allParams = commonFunctions.checkParams(req.body,required);
@@ -124,27 +219,11 @@ app.post('/api/event/', function (req, res) {
       return;
     }
 
-    commonFunctions.logRequest("/api/event",req.query);
-
-    /*var callback = function(result){
-      if(result===-1){
-        res.status(403).json({error:"User credentials incorrect"});
-      }else{
-        result=result.toObject();
-        req.session.userID = result.id;
-        result.energy = energyManager.getEnergyStats(result.countryCode);
-        res.status(200).json({success:"logged"});
-      }
-    };*/
-
     res.status(200).json({success:"logged"});
-  });
+});
 
 
 
 /*
   --------------------SETUP ROUTES----------------------
 */
-
-
-
